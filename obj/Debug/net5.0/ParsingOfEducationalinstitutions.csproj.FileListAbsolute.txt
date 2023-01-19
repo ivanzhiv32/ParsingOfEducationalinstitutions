@@ -1,0 +1,16 @@
+D:\Учеба\5 курс 1 семестр\Сбор данных\ParsingOfEducationalinstitutions\obj\Debug\net5.0\ParsingOfEducationalinstitutions.csproj.AssemblyReference.cache
+D:\Учеба\5 курс 1 семестр\Сбор данных\ParsingOfEducationalinstitutions\obj\Debug\net5.0\ParsingOfEducationalinstitutions.GeneratedMSBuildEditorConfig.editorconfig
+D:\Учеба\5 курс 1 семестр\Сбор данных\ParsingOfEducationalinstitutions\obj\Debug\net5.0\ParsingOfEducationalinstitutions.AssemblyInfoInputs.cache
+D:\Учеба\5 курс 1 семестр\Сбор данных\ParsingOfEducationalinstitutions\obj\Debug\net5.0\ParsingOfEducationalinstitutions.AssemblyInfo.cs
+D:\Учеба\5 курс 1 семестр\Сбор данных\ParsingOfEducationalinstitutions\obj\Debug\net5.0\ParsingOfEducationalinstitutions.csproj.CoreCompileInputs.cache
+D:\Учеба\5 курс 1 семестр\Сбор данных\ParsingOfEducationalinstitutions\bin\Debug\net5.0\ParsingOfEducationalinstitutions.exe
+D:\Учеба\5 курс 1 семестр\Сбор данных\ParsingOfEducationalinstitutions\bin\Debug\net5.0\ParsingOfEducationalinstitutions.deps.json
+D:\Учеба\5 курс 1 семестр\Сбор данных\ParsingOfEducationalinstitutions\bin\Debug\net5.0\ParsingOfEducationalinstitutions.runtimeconfig.json
+D:\Учеба\5 курс 1 семестр\Сбор данных\ParsingOfEducationalinstitutions\bin\Debug\net5.0\ParsingOfEducationalinstitutions.runtimeconfig.dev.json
+D:\Учеба\5 курс 1 семестр\Сбор данных\ParsingOfEducationalinstitutions\bin\Debug\net5.0\ParsingOfEducationalinstitutions.dll
+D:\Учеба\5 курс 1 семестр\Сбор данных\ParsingOfEducationalinstitutions\bin\Debug\net5.0\ref\ParsingOfEducationalinstitutions.dll
+D:\Учеба\5 курс 1 семестр\Сбор данных\ParsingOfEducationalinstitutions\bin\Debug\net5.0\ParsingOfEducationalinstitutions.pdb
+D:\Учеба\5 курс 1 семестр\Сбор данных\ParsingOfEducationalinstitutions\obj\Debug\net5.0\ParsingOfEducationalinstitutions.dll
+D:\Учеба\5 курс 1 семестр\Сбор данных\ParsingOfEducationalinstitutions\obj\Debug\net5.0\ref\ParsingOfEducationalinstitutions.dll
+D:\Учеба\5 курс 1 семестр\Сбор данных\ParsingOfEducationalinstitutions\obj\Debug\net5.0\ParsingOfEducationalinstitutions.pdb
+D:\Учеба\5 курс 1 семестр\Сбор данных\ParsingOfEducationalinstitutions\obj\Debug\net5.0\ParsingOfEducationalinstitutions.genruntimeconfig.cache

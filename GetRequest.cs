@@ -30,6 +30,25 @@ namespace ParsingOfEducationalinstitutions
         {
             _request = (HttpWebRequest)WebRequest.Create(_address);
             _request.Method = "Get";
+            _request.Accept = Accept;
+            _request.Host = Host;
+            _request.Referer = Referer;
+            _request.UserAgent = Useragent;
+
+            foreach (var pair in Headers)
+            {
+                _request.Headers.Add(pair.Key, pair.Value);
+            }
+
+            try
+            {
+                HttpWebResponse response = (HttpWebResponse)_request.GetResponse();
+                var stream = response.GetResponseStream();
+                if (stream != null) Response = new StreamReader(stream).ReadToEnd();
+            }
+            catch (Exception)
+            {
+            }
 
             try
             {
