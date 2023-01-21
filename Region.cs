@@ -10,20 +10,19 @@ using System.Threading.Tasks;
 
 namespace ParsingOfEducationalinstitutions
 {
-    
-    class Institution
+    class Region
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Adress { get; set; }
-        public string Department { get; set; }
-        public string Site { get; set; }
-        public string Founder { get; set; }
-        public List<Indicator> Indicators = new List<Indicator>();
+        public int CountAllStudents { get; set; }
+        public int CountFullTimeStudents { get; set; }
+        public int CountFreeFormStudents { get; set; }
         [JsonIgnore]
         public int Year { get; set; }
 
-        public Institution(int id, int year)
+        public List<Institution> Institutions = new List<Institution>();
+
+        public Region(int id, int year)
         {
             Id = id;
             Year = year;

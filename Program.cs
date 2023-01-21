@@ -1,6 +1,12 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using System.Text.Unicode;
+using System.Threading.Tasks;
 
 namespace ParsingOfEducationalinstitutions
 {
@@ -8,36 +14,17 @@ namespace ParsingOfEducationalinstitutions
     {
         static void Main(string[] args)
         {
-            //var year = "2021";
-            //var proxy = new WebProxy("127.0.0.1:8888");
-            //var cookieContainer = new CookieContainer();
-            var path = $"https://monitoring.miccedu.ru/?m=vpo&year=2021";
+            var parser = new Parser();
 
-            var getRequest = new GetRequest(path);
+            //Region region = new Region(10303, 2022);
+            //parser.ParseRegion(region);
+            //Console.WriteLine(region.Name);
 
-            getRequest.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9";
-            getRequest.Useragent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 YaBrowser/22.11.5.715 Yowser/2.5 Safari/537.36";
-            getRequest.Referer = "https://monitoring.miccedu.ru/?m=vpo";
-            getRequest.Host = "monitoring.miccedu.ru";
+            YearReport yearReport = new YearReport(2021);
+            parser.ParseYearReport(yearReport);
 
-            getRequest.Run();
-
-            WholeCountry country = new WholeCountry();
-            country.Parse(getRequest.Response);
-
-            List<GeoArea> geoAreas = country.GeoAreas;
-
-            foreach (var area in geoAreas)
-            {
-                area.Parse();
-                List<Institution> institutions = area.Institutions;
-                foreach (var institution in institutions)
-                {
-                    institution.Parse();
-                }
-            }
-
-            //List<Institution> institutions = geoAreas.
+            File.WriteAllText("test.json", string.Empty);
+            File.AppendAllText("test.json", JsonConvert.SerializeObject(yearReport));
 
             Console.ReadKey();
         }
