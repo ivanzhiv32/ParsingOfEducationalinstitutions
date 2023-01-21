@@ -15,18 +15,31 @@ namespace ParsingOfEducationalinstitutions
     {
         static void Main(string[] args)
         {
-            List<string> linksReady = new List<string>() { "https://monitoring.miccedu.ru/iam/2021/_vpo/inst.php?id=24", "https://monitoring.miccedu.ru/iam/2021/_vpo/inst.php?id=25" };
-            var parser = new Parser(linksReady);
+            //List<string> linksReady = new List<string>() { "https://monitoring.miccedu.ru/iam/2021/_vpo/inst.php?id=24", "https://monitoring.miccedu.ru/iam/2021/_vpo/inst.php?id=25" };
+            //var parser = new Parser(linksReady);
+            //Region region = new Region(10303, 2021);
+            //parser.ParseRegion(region);
+
+            DataBase db = new DataBase();
+            MySqlConnection connection = db.GetConnection();
+            db.OpenConnection();
+
+            var parser = new Parser(db.getLinksReady());
             Region region = new Region(10303, 2021);
             parser.ParseRegion(region);
 
-            //DataBase db = new DataBase();
-            //MySqlConnection connection = db.GetConnection();
-            //db.OpenConnection();
-            //MySqlCommand command = new MySqlCommand(String.Format("insert into `parser_institution`(`link`,`name`,`adress`,`founder`,`department`,`id_region`) values('{0}', '{1}', '{2}', '{3}', '{4}', {5})", 
+            //MySqlCommand command = new MySqlCommand(String.Format("insert into `parser_institution`(`link`,`name`,`adress`,`founder`,`department`,`id_region`) values('{0}', '{1}', '{2}', '{3}', '{4}', {5})",
             //    institution.Site, institution.Name, institution.Adress, institution.Founder, institution.Department, 1), connection);
-            //command.ExecuteNonQuery();
-            //db.CloseConnection();
+
+            //MySqlCommand command = new MySqlCommand("SELECT link FROM parser_institution", connection);
+            //var reader = command.ExecuteReader();
+
+            //while (reader.Read())
+            //{
+            //    // элементы массива [] - это значения столбцов из запроса SELECT
+            //    Console.WriteLine(reader[0].ToString());
+            //}
+            db.CloseConnection();
 
             //Проверка парсера
             //var parser = new Parser();

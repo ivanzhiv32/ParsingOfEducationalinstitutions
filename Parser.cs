@@ -185,8 +185,6 @@ namespace ParsingOfEducationalinstitutions
                     {
                         value = Double.NaN;
                     }
-                    //if (cells[3].TextContent == "-") value = Double.NaN;
-                    //else value = Convert.ToDouble(cells[3].TextContent.Replace(".", ","));
 
                     institution.Indicators.Add(new Indicator(number, name, unit_measure, value));
                 }
