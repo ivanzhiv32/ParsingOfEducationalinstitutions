@@ -26,7 +26,20 @@ namespace ParsingOfEducationalinstitutions
         {
             this.linksReady = linksReady;
         }
+        public List<YearReport> ParseAllData()
+        {
+            List<YearReport> listYearReports = new List<YearReport>();
 
+            for (int year = 2022; year > 2014; year--)
+            {
+                YearReport yearReport = new YearReport(year);
+                if (linksReady.Contains(GenerateLink(yearReport))) continue;
+                ParseYearReport(yearReport);
+                listYearReports.Add(yearReport);
+            }
+
+            return listYearReports;
+        }
         public void ParseYearReport(YearReport yearReport)
         {
             string link = GenerateLink(yearReport);
@@ -66,7 +79,8 @@ namespace ParsingOfEducationalinstitutions
 
             foreach (Match match in matches)
             {
-                yearReport.Regions.Add(new Region(Int32.Parse(match.Groups[1].Value), yearReport.Year));
+                Region region = new Region(Int32.Parse(match.Groups[1].Value), yearReport.Year);
+                if (!linksReady.Contains(GenerateLink(region))) yearReport.Regions.Add(region);
             }
 
             Parallel.ForEach(yearReport.Regions, region =>
@@ -92,8 +106,6 @@ namespace ParsingOfEducationalinstitutions
 
             getRequest.Run();
 
-            //Region region = new Region(id, year);
-
             MatchCollection matchName = Regex.Matches(getRequest.Response, @"color:#678;.>(.*)</div>");
             region.Name = matchName[0].Groups[1].Value;
 
@@ -111,7 +123,8 @@ namespace ParsingOfEducationalinstitutions
 
             foreach (Match match in matchesInstitution)
             {
-                region.Institutions.Add(new Institution(Int32.Parse(match.Groups[1].Value), region.Year));
+                Institution institution = new Institution(Int32.Parse(match.Groups[1].Value), region.Year);
+                if (!linksReady.Contains(GenerateLink(institution))) region.Institutions.Add(institution);
             }
 
             Parallel.ForEach(region.Institutions, institution =>
