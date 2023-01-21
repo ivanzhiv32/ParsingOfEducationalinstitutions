@@ -12,14 +12,24 @@ namespace ParsingOfEducationalinstitutions
 {
     class Region
     {
+        [JsonProperty("id_region")]
         public int Id { get; set; }
+
+        [JsonProperty("name_region")]
         public string Name { get; set; }
+
+        [JsonProperty("countAllStudents_region")]
         public int CountAllStudents { get; set; }
+
+        [JsonProperty("countFullTimeStudents_region")]
         public int CountFullTimeStudents { get; set; }
+
+        [JsonProperty("countFreeFormStudents_region")]
         public int CountFreeFormStudents { get; set; }
         [JsonIgnore]
         public int Year { get; set; }
 
+        [JsonProperty("institutions_region")]
         public List<Institution> Institutions = new List<Institution>();
 
         public Region(int id, int year)

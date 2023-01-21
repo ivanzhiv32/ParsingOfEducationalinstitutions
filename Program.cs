@@ -16,17 +16,20 @@ namespace ParsingOfEducationalinstitutions
         {
             var parser = new Parser();
 
-            //Region region = new Region(10303, 2022);
-            //parser.ParseRegion(region);
+            Region belgorod = new Region(10501, 2021); 
+            Region chuvash = new Region(10405, 2021);
+            parser.ParseRegion(belgorod);
+            parser.ParseRegion(chuvash);
             //Console.WriteLine(region.Name);
 
-            YearReport yearReport = new YearReport(2021);
-            parser.ParseYearReport(yearReport);
+            //YearReport yearReport = new YearReport(2021);
+            //parser.ParseYearReport(yearReport);
 
-            File.WriteAllText("test.json", string.Empty);
-            File.AppendAllText("test.json", JsonConvert.SerializeObject(yearReport));
+            File.WriteAllText("two_regions.json", string.Empty);
+            File.AppendAllText("two_regions.json", JsonConvert.SerializeObject(belgorod));
+            File.AppendAllText("two_regions.json", JsonConvert.SerializeObject(chuvash));
 
-            Console.ReadKey();
+            //Console.ReadKey();
         }
     }
 }

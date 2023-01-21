@@ -16,46 +16,7 @@ namespace ParsingOfEducationalinstitutions
     }
     class Parser
     {
-        //private string template_link_year;
-        //private string template_link_region;
-        //private string template_link_institution;
-        //private string TemplateLinkYear 
-        //{
-        //    get => template_link_year;
-        //    set => template_link_year = "https://monitoring.miccedu.ru/?m=vpo&year=" + value;
-        //}
-        //private string TemplateLinkRegion
-        //{
-        //    get => template_link_region;
-        //    set => template_link_region = "https://monitoring.miccedu.ru/iam/" + value + "/_vpo/material.php?type=2&id=";
-        //}
-        //private string TemplateLinkInstitution
-        //{
-        //    get => template_link_institution;
-        //    set => template_link_institution = "https://monitoring.miccedu.ru/iam/" + value + "/_vpo/inst.php?id=";
-        //}
-
-        //private List<int> idInstitutionReady = new List<int>();
-        //private List<int> idRegionsReady = new List<int>();
-        //private List<int> yearReady = new List<int>();
-        private List<string> linksReady = new List<string>();
-        public List<int> IdRegions;
-        public List<int> IdInstitutions;
-
-        //public Parser(List<int> yearReady)
-        //{
-        //    this.yearReady = yearReady;
-        //}
-
-        //public Parser(List<int> idRegionsReady, List<int> yearReady) : this(yearReady)
-        //{
-        //    this.idRegionsReady = idRegionsReady;
-        //}
-
-        //public Parser(List<int> idInstitutionReady, List<int> idRegionsReady, List<int> yearReady) : this(idRegionsReady, yearReady)
-        //{
-        //    this.idInstitutionReady = idInstitutionReady;
-        //}
+        public List<string> linksReady = new List<string>();
 
         public Parser()
         {
@@ -163,9 +124,6 @@ namespace ParsingOfEducationalinstitutions
 
         public void ParseInstitution(Institution institution)
         {
-            //TemplateLinkInstitution = Convert.ToString(institution.Year);
-            //string link = template_link_institution + Convert.ToString(institution.Id);
-
             string link = GenerateLink(institution);
 
             if (linksReady.Contains(link)) throw new Exception("Данные о выбранном институте уже собраны");
@@ -222,7 +180,6 @@ namespace ParsingOfEducationalinstitutions
             }
 
             linksReady.Add(link);
-            //idInstitutionReady.Add(institution.Id);
         }
 
         public string GenerateLink(Institution institution)

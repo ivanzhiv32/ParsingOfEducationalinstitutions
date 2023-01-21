@@ -1,4 +1,5 @@
 ﻿using AngleSharp.Html.Parser;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +11,19 @@ namespace ParsingOfEducationalinstitutions
 {
     class YearReport
     {
-        
+        [JsonProperty("year")]
         public int Year { get; set; }
+
+        [JsonProperty("countAllStudents_year")]
         public int CountAllStudents { get; set; }
+
+        [JsonProperty("countFullTimeStudents_year")]
         public int CountFullTimeStudents { get; set; }
+
+        [JsonProperty("countFreeFormStudents_year")]
         public int CountFreeFormStudents { get; set; }
+
+        [JsonProperty("regions_year")]
         public List<Region> Regions = new List<Region>();
 
         public YearReport(int year)
