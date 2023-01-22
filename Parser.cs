@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Text;
 using System.Threading.Tasks;
+using MySql.Data.MySqlClient;
 
 namespace ParsingOfEducationalinstitutions
 {
@@ -16,7 +17,8 @@ namespace ParsingOfEducationalinstitutions
     }
     class Parser
     {
-        public List<string> linksReady = new List<string>();
+        private List<string> linksReady = new List<string>();
+        private DataBase dataBase = new DataBase();
 
         public Parser()
         {
@@ -26,21 +28,27 @@ namespace ParsingOfEducationalinstitutions
         {
             this.linksReady = linksReady;
         }
-        public List<YearReport> ParseAllData()
+        public void Start()
         {
-            List<YearReport> listYearReports = new List<YearReport>();
+            //try
+            //{
+                //dataBase.OpenConnection();
+                linksReady = dataBase.GetLinksReady();
+                Console.WriteLine("Ссылки получены");
 
-            for (int year = 2022; year > 2014; year--)
-            {
-                YearReport yearReport = new YearReport(year);
-                if (linksReady.Contains(GenerateLink(yearReport))) continue;
-                ParseYearReport(yearReport);
-                listYearReports.Add(yearReport);
-            }
-
-            return listYearReports;
+                for (int year = 2022; year > 2014; year--)
+                {
+                    YearReport yearReport = new YearReport(year);
+                    if (linksReady.Contains(GenerateLink(yearReport))) continue;
+                    ParseYearReport(yearReport);
+                }
+            //}
+            //catch
+            //{
+            //    dataBase.CloseConnection();
+            //}
         }
-        public void ParseYearReport(YearReport yearReport)
+        private void ParseYearReport(YearReport yearReport)
         {
             string link = GenerateLink(yearReport);
 
@@ -72,7 +80,9 @@ namespace ParsingOfEducationalinstitutions
                 yearReport.CountFullTimeStudents = 0;
                 yearReport.CountFreeFormStudents = 0;
             }
-
+            
+            int idYearReport = dataBase.AddYearReport(yearReport);
+            Console.WriteLine("Данные года добавлены");
 
             Regex regex = new Regex(@"id=(\d{5})'");
             MatchCollection matches = regex.Matches(getRequest.Response);
@@ -85,29 +95,31 @@ namespace ParsingOfEducationalinstitutions
 
             Parallel.ForEach(yearReport.Regions, region =>
             {
-                ParseRegion(region);
+                ParseRegion(region, idYearReport);
             });
 
+            dataBase.AddLinkReady(link);
             linksReady.Add(link);
         }
 
-        public void ParseRegion(Region region)
+        public void ParseRegion(Region region,  int idYear)
         {
             string link = GenerateLink(region);
 
             if (linksReady.Contains(link)) throw new Exception("Данные о выбранном регионе уже собраны");
 
             var getRequest = new GetRequest(link);
-
             getRequest.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9";
             getRequest.Useragent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 YaBrowser/22.11.5.715 Yowser/2.5 Safari/537.36";
             getRequest.Referer = "https://monitoring.miccedu.ru/?m=vpo&year=" + Convert.ToString(region.Year);
             getRequest.Host = "monitoring.miccedu.ru";
-
             getRequest.Run();
 
             MatchCollection matchName = Regex.Matches(getRequest.Response, @"color:#678;.>(.*)</div>");
             region.Name = matchName[0].Groups[1].Value;
+
+            int idRegion = dataBase.AddRegion(region);
+            Console.WriteLine("Справочные данные региона добавлены");
 
             var parser = new HtmlParser();
             var document = parser.ParseDocument(getRequest.Response);
@@ -119,6 +131,9 @@ namespace ParsingOfEducationalinstitutions
             if (region.Year > 2017) region.CountFreeFormStudents = Convert.ToInt32(values[2].TextContent.Replace(" ", ""));
             else region.CountFreeFormStudents = 0;
 
+            int idRegionReport = dataBase.AddRegionReport(region, idRegion, idYear);
+            Console.WriteLine("Годовой отчет региона добавлен");
+
             MatchCollection matchesInstitution = Regex.Matches(getRequest.Response, @"<td id=(\d*)");
 
             foreach (Match match in matchesInstitution)
@@ -129,13 +144,14 @@ namespace ParsingOfEducationalinstitutions
 
             Parallel.ForEach(region.Institutions, institution =>
             {
-                ParseInstitution(institution);
+                ParseInstitution(institution, idRegion, idYear);
             });
 
+            dataBase.AddLinkReady(link);
             linksReady.Add(link);
         }
 
-        public void ParseInstitution(Institution institution)
+        public void ParseInstitution(Institution institution, int idRegion, int idYear)
         {
             string link = GenerateLink(institution);
 
@@ -147,7 +163,7 @@ namespace ParsingOfEducationalinstitutions
             getRequest.Referer = "https://monitoring.miccedu.ru/?m=vpo&year=" + Convert.ToString(institution.Year);
             getRequest.Host = "monitoring.miccedu.ru";
             getRequest.Run();
-
+            
             var parser = new HtmlParser();
             var document = parser.ParseDocument(getRequest.Response);
 
@@ -159,6 +175,11 @@ namespace ParsingOfEducationalinstitutions
             institution.Department = rows_info[2].QuerySelectorAll("td")[1].TextContent;
             institution.Site = rows_info[3].QuerySelectorAll("td")[1].TextContent;
             institution.Founder = rows_info[4].QuerySelectorAll("td")[1].TextContent;
+
+            int idInstitution = dataBase.AddInstitution(institution, idRegion);
+            Console.WriteLine("Справочные данные института добавлены");
+
+            int idInstitutionReport = dataBase.AddInstitutionReport(idInstitution, idYear);
 
             var tables = document.GetElementsByClassName("napde");
 
@@ -183,13 +204,18 @@ namespace ParsingOfEducationalinstitutions
                     }
                     catch
                     {
-                        value = Double.NaN;
+                        value = 0;
                     }
 
                     institution.Indicators.Add(new Indicator(number, name, unit_measure, value));
+                    int idUnitMeasure = dataBase.AddUnitMeasure(unit_measure);
+                    int idNameIndicator = dataBase.AddNameIndicator(name, number, idUnitMeasure);
+                    int idValueIndicator = dataBase.AddValueIndicator(idInstitutionReport, idNameIndicator, value);
+                    Console.WriteLine("Данные годового отчета института добавлены");
                 }
             }
 
+            dataBase.AddLinkReady(link);
             linksReady.Add(link);
         }
 
