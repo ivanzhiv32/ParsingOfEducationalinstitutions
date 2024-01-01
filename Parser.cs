@@ -18,10 +18,13 @@ namespace ParsingOfEducationalinstitutions
     class Parser
     {
         private List<string> linksReady = new List<string>();
+        private List<string> unitsMeasure = new List<string>();
+
         private DataBase dataBase = new DataBase();
 
         public Parser()
         {
+            linksReady = dataBase.GetLinksReady();
         }
 
         public Parser(List<string> linksReady)
@@ -30,30 +33,22 @@ namespace ParsingOfEducationalinstitutions
         }
         public void Start()
         {
-            //try
-            //{
-                //dataBase.OpenConnection();
-                linksReady = dataBase.GetLinksReady();
-                Console.WriteLine("Ссылки получены");
+            linksReady = dataBase.GetLinksReady();
+            Console.WriteLine("Ссылки получены\n");
 
-                for (int year = 2022; year > 2014; year--)
-                {
-                    YearReport yearReport = new YearReport(year);
-                    if (linksReady.Contains(GenerateLink(yearReport))) continue;
-                    ParseYearReport(yearReport);
-                }
-            //}
-            //catch
-            //{
-            //    dataBase.CloseConnection();
-            //}
+            for (int year = 2023; year > 2014; year--)
+            {
+                YearReport yearReport = new YearReport(year);
+                if (linksReady.Contains(GenerateLink(yearReport))) continue;
+                ParseYearReport(yearReport);
+            }
         }
-        private void ParseYearReport(YearReport yearReport)
+        public void ParseYearReport(YearReport yearReport)
         {
             string link = GenerateLink(yearReport);
 
             if (linksReady.Contains(link)) throw new Exception("Данные о выбранном регионе уже собраны");
-            if (yearReport.Year > 2022 || yearReport.Year < 2015) throw new Exception("Веб-ресурс не содержит данные за выбранную дату");
+            if (yearReport.Year > 2023 || yearReport.Year < 2015) throw new Exception("Веб-ресурс не содержит данные за выбранную дату");
 
             var getRequest = new GetRequest(link);
             getRequest.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9";
@@ -82,7 +77,7 @@ namespace ParsingOfEducationalinstitutions
             }
             
             int idYearReport = dataBase.AddYearReport(yearReport);
-            Console.WriteLine("Данные года добавлены");
+            Console.Write("Данные " + yearReport.Year + " года добавлены\n");
 
             Regex regex = new Regex(@"id=(\d{5})'");
             MatchCollection matches = regex.Matches(getRequest.Response);
@@ -93,10 +88,14 @@ namespace ParsingOfEducationalinstitutions
                 if (!linksReady.Contains(GenerateLink(region))) yearReport.Regions.Add(region);
             }
 
-            Parallel.ForEach(yearReport.Regions, region =>
+            foreach(Region region in yearReport.Regions)
             {
                 ParseRegion(region, idYearReport);
-            });
+            }
+            //Parallel.ForEach(yearReport.Regions, region =>
+            //{
+            //    ParseRegion(region, idYearReport);
+            //});
 
             dataBase.AddLinkReady(link);
             linksReady.Add(link);
@@ -119,7 +118,7 @@ namespace ParsingOfEducationalinstitutions
             region.Name = matchName[0].Groups[1].Value;
 
             int idRegion = dataBase.AddRegion(region);
-            Console.WriteLine("Справочные данные региона добавлены");
+            Console.Write("Справочные данные " + region.Name + " добавлены\n");
 
             var parser = new HtmlParser();
             var document = parser.ParseDocument(getRequest.Response);
@@ -132,7 +131,7 @@ namespace ParsingOfEducationalinstitutions
             else region.CountFreeFormStudents = 0;
 
             int idRegionReport = dataBase.AddRegionReport(region, idRegion, idYear);
-            Console.WriteLine("Годовой отчет региона добавлен");
+            Console.Write("Годовой отчет " + region.Name + " добавлен\n");
 
             MatchCollection matchesInstitution = Regex.Matches(getRequest.Response, @"<td id=(\d*)");
 
@@ -151,6 +150,73 @@ namespace ParsingOfEducationalinstitutions
             linksReady.Add(link);
         }
 
+        //public void ParseInstitution(Institution institution, int idRegion, int idYear)
+        //{
+        //    string link = GenerateLink(institution);
+
+        //    if (linksReady.Contains(link)) throw new Exception("Данные о выбранном институте уже собраны");
+
+        //    var getRequest = new GetRequest(link);
+        //    getRequest.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9";
+        //    getRequest.Useragent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 YaBrowser/22.11.5.715 Yowser/2.5 Safari/537.36";
+        //    getRequest.Referer = "https://monitoring.miccedu.ru/?m=vpo&year=" + Convert.ToString(institution.Year);
+        //    getRequest.Host = "monitoring.miccedu.ru";
+        //    getRequest.Run();
+
+        //    var parser = new HtmlParser();
+        //    var document = parser.ParseDocument(getRequest.Response);
+
+        //    var table_info = document.GetElementById("info");
+        //    var rows_info = table_info.QuerySelectorAll("tr");
+
+        //    institution.Name = rows_info[0].QuerySelectorAll("td")[1].TextContent;
+        //    institution.Adress = rows_info[1].GetElementsByTagName("span")[0].TextContent;
+        //    institution.Department = rows_info[2].QuerySelectorAll("td")[1].TextContent;
+        //    institution.Site = rows_info[3].QuerySelectorAll("td")[1].TextContent;
+        //    institution.Founder = rows_info[4].QuerySelectorAll("td")[1].TextContent;
+
+        //    int idInstitution = dataBase.AddInstitution(institution, idRegion);
+        //    Console.Write("Справочные данные института добавлены\n");
+
+        //    int idInstitutionReport = dataBase.AddInstitutionReport(idInstitution, idYear);
+
+        //    var tables = document.GetElementsByClassName("napde");
+
+        //    double value;
+        //    string name, unit_measure, number;
+
+        //    foreach (var table in tables)
+        //    {
+        //        var rows = table.QuerySelectorAll("tr");
+
+        //        foreach (var row in rows.Skip(1))
+        //        {
+        //            var cells = row.QuerySelectorAll("td");
+
+        //            number = cells[0].TextContent.Replace(".", ",");
+        //            name = cells[1].TextContent;
+        //            unit_measure = cells[2].TextContent;
+
+        //            try
+        //            {
+        //                value = Convert.ToDouble(cells[3].TextContent.Replace(".", ","));
+        //            }
+        //            catch
+        //            {
+        //                value = 0;
+        //            }
+
+        //            institution.Indicators.Add(new Indicator(number, name, unit_measure, value));
+        //            int idUnitMeasure = dataBase.AddUnitMeasure(unit_measure);
+        //            int idNameIndicator = dataBase.AddNameIndicator(name, number, idUnitMeasure);
+        //            int idValueIndicator = dataBase.AddValueIndicator(idInstitutionReport, idNameIndicator, value);                    
+        //        }
+        //    }
+        //    Console.Write("Данные годового отчета института добавлены\n");
+
+        //    dataBase.AddLinkReady(link);
+        //    linksReady.Add(link);
+        //}
         public void ParseInstitution(Institution institution, int idRegion, int idYear)
         {
             string link = GenerateLink(institution);
@@ -163,7 +229,7 @@ namespace ParsingOfEducationalinstitutions
             getRequest.Referer = "https://monitoring.miccedu.ru/?m=vpo&year=" + Convert.ToString(institution.Year);
             getRequest.Host = "monitoring.miccedu.ru";
             getRequest.Run();
-            
+
             var parser = new HtmlParser();
             var document = parser.ParseDocument(getRequest.Response);
 
@@ -177,14 +243,182 @@ namespace ParsingOfEducationalinstitutions
             institution.Founder = rows_info[4].QuerySelectorAll("td")[1].TextContent;
 
             int idInstitution = dataBase.AddInstitution(institution, idRegion);
-            Console.WriteLine("Справочные данные института добавлены");
+            Console.Write("Справочные данные института добавлены\n");
 
             int idInstitutionReport = dataBase.AddInstitutionReport(idInstitution, idYear);
 
-            var tables = document.GetElementsByClassName("napde");
+            //double value;
+            //string name, unit_measure, number;
 
-            double number, value;
-            string name, unit_measure;
+            ParseMainTables(document, idInstitutionReport);
+            ParseSecondaryTable(document, idInstitutionReport);
+            ParseBranchOfScience(document, idInstitutionReport);
+            ParseUgn(document, idInstitution);
+            //Парсинг основных таблиц сайта
+            //var tables = document.GetElementsByClassName("napde");
+
+            //foreach (var table in tables)
+            //{
+            //    var rows = table.QuerySelectorAll("tr");
+
+            //    foreach (var row in rows.Skip(1))
+            //    {
+            //        var cells = row.QuerySelectorAll("td");
+
+            //        number = cells[0].TextContent.Replace(".", ",");
+            //        name = cells[1].TextContent;
+            //        unit_measure = cells[2].TextContent;
+
+            //        try
+            //        {
+            //            value = Convert.ToDouble(cells[3].TextContent.Replace(".", ","));
+            //        }
+            //        catch
+            //        {
+            //            value = 0;
+            //        }
+
+            //        institution.Indicators.Add(new Indicator(number, name, unit_measure, value));
+            //        int idUnitMeasure = dataBase.AddUnitMeasure(unit_measure);
+            //        int idNameIndicator = dataBase.AddNameIndicator(name, number, idUnitMeasure);
+            //        int idValueIndicator = dataBase.AddValueIndicator(idInstitutionReport, idNameIndicator, value);
+            //    }
+            //}
+
+            //Парсинг дополнительной информации (Нижняя таблица на сайте)
+            //var table_dop = document.GetElementById("analis_dop");
+            //if (table_dop == null)
+            //{
+            //    Console.WriteLine("Данные не найдены");
+            //    return;
+            //}
+            //var rows_dop = table_dop.QuerySelectorAll("tr");
+            //foreach (var row in rows_dop.Skip(3))
+            //{
+            //    var cells = row.QuerySelectorAll("td");
+            //    if (cells.Count() < 3)
+            //    {
+            //        continue;
+            //    }
+            //    else if (cells.Count() == 4)
+            //    {
+            //        number = cells[0].TextContent.Replace(".", ",");
+            //        name = cells[1].TextContent;
+            //        unit_measure = cells[2].TextContent;
+            //        try
+            //        {
+            //            value = Convert.ToDouble(cells[3].TextContent.Replace(".", ","));
+            //        }
+            //        catch
+            //        {
+            //            value = 0;
+            //        }
+            //    }
+            //    else
+            //    {
+            //        number = "0";
+            //        name = cells[0].TextContent;
+            //        unit_measure = cells[1].TextContent;
+            //        try
+            //        {
+            //            value = Convert.ToDouble(cells[2].TextContent.Replace(".", ","));
+            //        }
+            //        catch
+            //        {
+            //            value = 0;
+            //        }
+            //    }
+            //    institution.Indicators.Add(new Indicator(number, name, unit_measure, value));
+            //    int idUnitMeasure = dataBase.AddUnitMeasure(unit_measure);
+            //    int idNameIndicator = dataBase.AddNameIndicator(name, number, idUnitMeasure);
+            //    int idValueIndicator = dataBase.AddValueIndicator(idInstitutionReport, idNameIndicator, value);
+            //}
+
+            //Парсинг таблицы с УГН
+            //var table_reg = document.GetElementById("analis_reg");
+            //if (table_reg == null) 
+            //{
+            //    Console.WriteLine("Данные не найдены");
+            //    return;
+            //} 
+
+            //var rows_reg = table_reg.QuerySelectorAll("tr");
+            //foreach (var row in rows_reg.Skip(2))
+            //{
+            //    var cells = row.QuerySelectorAll("td");
+            //    if (cells.Count() < 6)
+            //    {
+            //        continue;
+            //    }
+            //    else
+            //    {
+            //        name = cells[0].TextContent;
+            //        try
+            //        {
+            //            value = Convert.ToDouble(cells[1].TextContent.Replace(".", ","));
+            //        }
+            //        catch
+            //        {
+            //            value = 0;
+            //        }
+            //    }
+
+            //    int idUgn = dataBase.AddUgn(name);
+            //    institution.Ugns.Add(new Ugn(idUgn, name));
+            //    int idDistributionUgn = dataBase.AddDistributionUgn(idInstitution, idUgn, (int)value);
+            //}
+
+
+            //Парсинг отраслей наук
+            //var table_branches = document.GetElementById("kont_by_otr");
+            //if (table_branches == null)
+            //{
+            //    Console.WriteLine("Данные не найдены");
+            //    return;
+            //}
+
+            //var rows_branches = table_branches.QuerySelectorAll("tr");
+            //foreach (var row in rows_branches.Skip(1))
+            //{
+            //    var cells = row.QuerySelectorAll("td");
+            //    if (cells.Count() != 3)
+            //    {
+            //        continue;
+            //    }
+            //    else
+            //    {
+            //        name = cells[0].TextContent;
+            //        try
+            //        {
+            //            value = Convert.ToDouble(cells[2].QuerySelector("span").TextContent);
+            //        }
+            //        catch
+            //        {
+            //            value = 0;
+            //        }
+            //    }
+
+            //    int idBranch = dataBase.AddBranchScience(name);
+            //    int idDistributionBranch = dataBase.AddDistributionBranch(idInstitutionReport, idBranch, (int)value);
+            //}
+
+            Console.Write("Данные годового отчета института добавлены\n");
+
+            dataBase.AddLinkReady(link);
+            linksReady.Add(link);
+        }
+
+        /// <summary>
+        /// Сбор данных из основных таблиц сайта
+        /// </summary>
+        /// <param name="document"></param>
+        /// <param name="idInstitutionReport"></param>
+        public void ParseMainTables(AngleSharp.Html.Dom.IHtmlDocument document, int idInstitutionReport)
+        {
+            double value;
+            string name, unit_measure, number;
+
+            var tables = document.GetElementsByClassName("napde");
 
             foreach (var table in tables)
             {
@@ -194,7 +428,7 @@ namespace ParsingOfEducationalinstitutions
                 {
                     var cells = row.QuerySelectorAll("td");
 
-                    number = Convert.ToDouble(cells[0].TextContent.Replace(".", ","));
+                    number = cells[0].TextContent.Replace(".", ",");
                     name = cells[1].TextContent;
                     unit_measure = cells[2].TextContent;
 
@@ -207,16 +441,151 @@ namespace ParsingOfEducationalinstitutions
                         value = 0;
                     }
 
-                    institution.Indicators.Add(new Indicator(number, name, unit_measure, value));
+                    //institution.Indicators.Add(new Indicator(number, name, unit_measure, value));
                     int idUnitMeasure = dataBase.AddUnitMeasure(unit_measure);
                     int idNameIndicator = dataBase.AddNameIndicator(name, number, idUnitMeasure);
-                    int idValueIndicator = dataBase.AddValueIndicator(idInstitutionReport, idNameIndicator, value);
-                    Console.WriteLine("Данные годового отчета института добавлены");
+                    dataBase.AddValueIndicator(idInstitutionReport, idNameIndicator, value);
                 }
             }
+        }
 
-            dataBase.AddLinkReady(link);
-            linksReady.Add(link);
+        /// <summary>
+        /// Сбор данных из таблицы с дополнительными характеристиками
+        /// </summary>
+        /// <param name="document"></param>
+        /// <param name="idInstitutionReport"></param>
+        public void ParseSecondaryTable(AngleSharp.Html.Dom.IHtmlDocument document, int idInstitutionReport)
+        {
+            double value;
+            string name, unit_measure, number;
+
+            var table_dop = document.GetElementById("analis_dop");
+            if (table_dop == null) return;
+
+            var rows_dop = table_dop.QuerySelectorAll("tr");
+            foreach (var row in rows_dop.Skip(3))
+            {
+                var cells = row.QuerySelectorAll("td");
+                if (cells.Count() < 3)
+                {
+                    continue;
+                }
+                else if (cells.Count() == 4)
+                {
+                    number = cells[0].TextContent.Replace(".", ",");
+                    name = cells[1].TextContent;
+                    unit_measure = cells[2].TextContent;
+                    try
+                    {
+                        value = Convert.ToDouble(cells[3].TextContent.Replace(".", ","));
+                    }
+                    catch
+                    {
+                        value = 0;
+                    }
+                }
+                else
+                {
+                    number = "0";
+                    name = cells[0].TextContent;
+                    unit_measure = cells[1].TextContent;
+                    try
+                    {
+                        value = Convert.ToDouble(cells[2].TextContent.Replace(".", ","));
+                    }
+                    catch
+                    {
+                        value = 0;
+                    }
+                }
+
+                //institution.Indicators.Add(new Indicator(number, name, unit_measure, value));
+                int idUnitMeasure = dataBase.AddUnitMeasure(unit_measure);
+                int idNameIndicator = dataBase.AddNameIndicator(name, number, idUnitMeasure);
+                dataBase.AddValueIndicator(idInstitutionReport, idNameIndicator, value);
+            }
+        }
+        /// <summary>
+        /// Сбор данных об отраслях наук
+        /// </summary>
+        /// <param name="document"></param>
+        /// <param name="idInstitutionReport"></param>
+        public void ParseBranchOfScience(AngleSharp.Html.Dom.IHtmlDocument document, int idInstitutionReport)
+        {
+            int value;
+            string name;
+
+            var table_branches = document.GetElementById("kont_by_otr");
+            if (table_branches == null) return;
+
+            var rows_branches = table_branches.QuerySelectorAll("tr");
+            foreach (var row in rows_branches.Skip(1))
+            {
+                var cells = row.QuerySelectorAll("td");
+                if (cells.Count() != 3)
+                {
+                    continue;
+                }
+                else
+                {
+                    name = cells[0].TextContent;
+                    try
+                    {
+                        value = Convert.ToInt32(cells[2].QuerySelector("span").TextContent);
+                    }
+                    catch
+                    {
+                        value = 0;
+                    }
+                }
+
+                int idBranch = dataBase.AddBranchScience(name);
+                dataBase.AddDistributionBranch(idInstitutionReport, idBranch, value);
+            }
+        }
+
+        /// <summary>
+        /// Сбор данных о специальностях, реализуемых в образовательной организации
+        /// </summary>
+        /// <param name="document"></param>
+        /// <param name="idInstitution"></param>
+        public void ParseUgn(AngleSharp.Html.Dom.IHtmlDocument document, int idInstitution)
+        {
+            string name; 
+            int value;
+
+            var table_reg = document.GetElementById("analis_reg");
+            if (table_reg == null) return;
+
+            var rows_reg = table_reg.QuerySelectorAll("tr");
+            foreach (var row in rows_reg.Skip(2))
+            {
+                var cells = row.QuerySelectorAll("td");
+                if (cells.Count() < 6)
+                {
+                    continue;
+                }
+                else
+                {
+                    name = cells[0].TextContent;
+                    try
+                    {
+                        value = Convert.ToInt32(cells[1].TextContent.Replace(".", ","));
+                    }
+                    catch
+                    {
+                        value = 0;
+                    }
+                }
+
+                int idUgn = dataBase.AddUgn(name);
+                //institution.Ugns.Add(new Ugn(idUgn, name));
+                dataBase.AddDistributionUgn(idInstitution, idUgn, value);
+            }
+        }
+        public void ParseReviews(Institution institution)
+        {
+
         }
 
         public string GenerateLink(Institution institution)

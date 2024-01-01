@@ -30,12 +30,13 @@ namespace ParsingOfEducationalinstitutions
         public int Year { get; set; }
 
         [JsonProperty("institutions_region")]
-        public List<Institution> Institutions = new List<Institution>();
+        public List<Institution> Institutions { get; set; }
 
         public Region(int id, int year)
         {
             Id = id;
             Year = year;
+            Institutions = new List<Institution>();
         }
     }
 }

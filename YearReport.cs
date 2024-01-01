@@ -24,12 +24,13 @@ namespace ParsingOfEducationalinstitutions
         public int CountFreeFormStudents { get; set; }
 
         [JsonProperty("regions_year")]
-        public List<Region> Regions = new List<Region>();
+        public List<Region> Regions { get; set; }
 
         public YearReport(int year)
         {
-            if (year > 2022 || year < 2015) throw new Exception("Веб-ресурс не содержит данные за выбранную дату");
+            if (year > 2023 || year < 2015) throw new Exception("Веб-ресурс не содержит данные за выбранную дату");
             Year = year;
+            Regions = new List<Region>();
         }
     }
 }

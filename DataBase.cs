@@ -11,352 +11,343 @@ namespace ParsingOfEducationalinstitutions
 {
     class DataBase
     {
-        string connection_params = "server=s2.kts.tu-bryansk.ru;port=3306;username=IAS18.ZHivII;password=3q%Md=Q2/4;database=IAS18_ZHivII";
-        //public void OpenConnection()
-        //{
-        //    if (connection.State == System.Data.ConnectionState.Closed)
-        //        connection.Open();
-        //    Console.WriteLine("Connection is opened");
-        //}
-        //public void CloseConnection()
-        //{
-        //    if (connection.State == System.Data.ConnectionState.Open)
-        //        connection.Close();
-        //    Console.WriteLine("Connection is closed");
-        //}
-        //public MySqlConnection GetConnection()
-        //{
-        //    return connection;
-        //}
-        //public List<string> getLinksReady()
-        //{
-        //    if (connection.State == System.Data.ConnectionState.Closed) throw new Exception("Подкючение к базе данных закрыто");
+        string connection_params = "server=127.0.0.1;port=3306;username=root;password=dgiva4444;database=new_schema";
+        //string connection_params = "server=s2.kts.tu-bryansk.ru;port=3306;username=IAS18.ZHivII;password=3q%Md=Q2/4;database=IAS18_ZHivII";
 
-        //    MySqlCommand command = new MySqlCommand("SELECT link FROM parser_institution_report_year union SELECT link FROM parser_region_report_year union SELECT link FROM parser_years_reports", 
-        //        connection);
-
-        //    var reader = command.ExecuteReader();
-
-        //    List<string> linksReady = new List<string>();
-        //    while (reader.Read())
-        //    {
-        //        if (reader[0].ToString() == "") continue;
-        //        linksReady.Add(reader[0].ToString());
-        //    }
-
-        //    return linksReady;
-        //}
         public List<string> GetLinksReady()
         {
-            //if (connection.State == System.Data.ConnectionState.Closed) throw new Exception("Подкючение к базе данных закрыто");
-            MySqlConnection connection = new MySqlConnection(connection_params);
-            connection.Open();
-
-            MySqlCommand command = new MySqlCommand("SELECT link FROM parser_links_ready_data", connection); 
-
-            var reader = command.ExecuteReader();
-
             List<string> linksReady = new List<string>();
-            while (reader.Read())
+            using (MySqlConnection connection = new MySqlConnection(connection_params))
+            using (MySqlCommand command = new MySqlCommand("SELECT link FROM links_ready", connection)) //links_ready_data
             {
-                if (reader[0].ToString() == "") continue;
-                linksReady.Add(reader[0].ToString());
-            }
+                connection.Open();
 
-            reader.Close();
-            connection.Close();
+                var reader = command.ExecuteReader();
+                
+                while (reader.Read())
+                {
+                    if (reader[0].ToString() == "") continue;
+                    linksReady.Add(reader[0].ToString());
+                }
+
+                reader.Close();
+                connection.Close();
+            }
 
             return linksReady;
         }
-
-        public int AddYearReport(YearReport yearReport) //Готовый
+        public int AddYearReport(YearReport yearReport)
         {
-            MySqlConnection connection = new MySqlConnection(connection_params);
-            connection.Open();
+            int id;
+            using (MySqlConnection connection = new MySqlConnection(connection_params))
+            using (MySqlCommand command = new MySqlCommand("add_year", connection))
+            {
+                connection.Open();
 
-            MySqlCommand command = new MySqlCommand("add_year", connection);
-            command.CommandType = CommandType.StoredProcedure;
+                command.CommandType = CommandType.StoredProcedure;
 
-            command.Parameters.Add(new MySqlParameter("_year", yearReport.Year));
-            command.Parameters.Add(new MySqlParameter("_count_all_students", yearReport.CountAllStudents));
-            command.Parameters.Add(new MySqlParameter("_count_fulltime_students", yearReport.CountFullTimeStudents));
-            command.Parameters.Add(new MySqlParameter("_count_freeform_students", yearReport.CountFreeFormStudents));
-            command.Parameters.Add(new MySqlParameter("out_id", 0));
-            command.Parameters["?out_id"].Direction = ParameterDirection.Output;
+                command.Parameters.Add(new MySqlParameter("_year", yearReport.Year));
+                command.Parameters.Add(new MySqlParameter("_count_all_students", yearReport.CountAllStudents));
+                command.Parameters.Add(new MySqlParameter("_count_fulltime_students", yearReport.CountFullTimeStudents));
+                command.Parameters.Add(new MySqlParameter("_count_freeform_students", yearReport.CountFreeFormStudents));
+                command.Parameters.Add(new MySqlParameter("out_id", 0));
+                command.Parameters["?out_id"].Direction = ParameterDirection.Output;
 
-            command.ExecuteNonQuery();
+                command.ExecuteNonQuery();
 
-            connection.Close();
+                connection.Close();
 
-            int id = Convert.ToInt32(command.Parameters["?out_id"].Value);
+                id = Convert.ToInt32(command.Parameters["?out_id"].Value);
+            }
+
             return id;
         }
-        //public int CallProcedure(string nameProcedure, Dictionary<string, int> parameters)
-        //{
-        //    MySqlCommand command = new MySqlCommand(nameProcedure, connection);
-        //    command.CommandType = CommandType.StoredProcedure;
-        //    foreach (string key in parameters.Keys)
-        //    {
-        //        command.Parameters.Add(new MySqlParameter(key, parameters[key]));
-        //    }
-        //    command.Parameters["?out_id"].Direction = ParameterDirection.Output;
-
-        //    command.ExecuteNonQuery();
-        //    int id = Convert.ToInt32(command.Parameters["?out_id"].Value);
-        //    return id;
-        //}
-        //public int GetIdYearReport(int year)
-        //{
-        //    if (connection.State == System.Data.ConnectionState.Closed) throw new Exception("Подкючение к базе данных закрыто");
-
-        //    MySqlCommand command = new MySqlCommand(String.Format("SELECT id FROM parser_years_reports WHERE year = {0}", year), connection);
-
-        //    var id_year = Convert.ToInt32(command.ExecuteScalar());
-
-        //    return id_year;
-        //}
-        //public void AddYear(YearReport yearReport)
-        //{
-        //    if (connection.State == System.Data.ConnectionState.Closed) throw new Exception("Подкючение к базе данных закрыто");
-
-        //    MySqlCommand command = new MySqlCommand(String.Format("INSERT INTO parser_years_reports (year, count_all_students, count_fulltime_students, count_freeform_students) VALUES ({0}, {1}, {2}, {3})",
-        //        yearReport.Year, yearReport.CountAllStudents, yearReport.CountFullTimeStudents, yearReport.CountFreeFormStudents), connection);
-        //    command.ExecuteNonQuery();
-        //}
-        public int AddRegion(Region region) //Готовый
+        public int AddRegion(Region region)
         {
-            Thread.Sleep(1000);
-            MySqlConnection connection = new MySqlConnection(connection_params);
-            connection.Open();
+            Thread.Sleep(5000);
+            int id;
+            using (MySqlConnection connection = new MySqlConnection(connection_params))
+            using (MySqlCommand command = new MySqlCommand("add_region", connection))
+            {
+                connection.Open();
 
-            MySqlCommand command = new MySqlCommand("add_region", connection);
-            command.CommandType = CommandType.StoredProcedure;
+                command.CommandType = CommandType.StoredProcedure;
 
-            command.Parameters.Add(new MySqlParameter("_name", region.Name));
-            command.Parameters.Add(new MySqlParameter("out_id", 0));
-            command.Parameters["?out_id"].Direction = ParameterDirection.Output;
+                command.Parameters.Add(new MySqlParameter("_name", region.Name));
+                command.Parameters.Add(new MySqlParameter("out_id", 0));
+                command.Parameters["?out_id"].Direction = ParameterDirection.Output;
 
-            command.ExecuteNonQuery();
-            connection.Close();
+                command.ExecuteNonQuery();
+                connection.Close();
 
-            int id = Convert.ToInt32(command.Parameters["?out_id"].Value);
+                id = Convert.ToInt32(command.Parameters["?out_id"].Value);
+            }
+
             return id;
         }
-
-        //public int GetIdRegion(string name)
-        //{
-        //    if (connection.State == System.Data.ConnectionState.Closed) throw new Exception("Подкючение к базе данных закрыто");
-
-        //    MySqlCommand command = new MySqlCommand(String.Format("SELECT id FROM parser_region WHERE name = '{0}'", name), connection);
-        //    var id_year = Convert.ToInt32(command.ExecuteScalar());
-
-        //    return id_year;
-        //}
-        //public void AddRegion(Region region)
-        //{
-        //    if (connection.State == System.Data.ConnectionState.Closed) throw new Exception("Подкючение к базе данных закрыто");
-
-        //    MySqlCommand command = new MySqlCommand(String.Format("INSERT INTO parser_region (name) VALUES ('{0}')", region.Name), connection);
-        //    command.ExecuteNonQuery();
-
-        //}
-        public int AddRegionReport(Region region, int idRegion, int idYearReport) //Готовый
+        public int AddRegionReport(Region region, int idRegion, int idYearReport)
         {
-            Thread.Sleep(1000);
-            MySqlConnection connection = new MySqlConnection(connection_params);
-            connection.Open();
+            Thread.Sleep(5000);
+            int id;
+            using (MySqlConnection connection = new MySqlConnection(connection_params))
+            using (MySqlCommand command = new MySqlCommand("add_region_report", connection))
+            {
+                connection.Open();
 
-            MySqlCommand command = new MySqlCommand("add_region_report", connection);
-            command.CommandType = CommandType.StoredProcedure;
+                command.CommandType = CommandType.StoredProcedure;
 
-            command.Parameters.Add(new MySqlParameter("_id_region", idRegion));
-            command.Parameters.Add(new MySqlParameter("_id_year", idYearReport));
-            command.Parameters.Add(new MySqlParameter("_count_all_students", region.CountAllStudents));
-            command.Parameters.Add(new MySqlParameter("_count_fulltime_students", region.CountFullTimeStudents));
-            command.Parameters.Add(new MySqlParameter("_count_freeform_students", region.CountFreeFormStudents));
-            command.Parameters.Add(new MySqlParameter("out_id", 0));
-            command.Parameters["?out_id"].Direction = ParameterDirection.Output;
+                command.Parameters.Add(new MySqlParameter("_id_region", idRegion));
+                command.Parameters.Add(new MySqlParameter("_id_year", idYearReport));
+                command.Parameters.Add(new MySqlParameter("_count_all_students", region.CountAllStudents));
+                command.Parameters.Add(new MySqlParameter("_count_fulltime_students", region.CountFullTimeStudents));
+                command.Parameters.Add(new MySqlParameter("_count_freeform_students", region.CountFreeFormStudents));
+                command.Parameters.Add(new MySqlParameter("out_id", 0));
+                command.Parameters["?out_id"].Direction = ParameterDirection.Output;
 
-            command.ExecuteNonQuery();
-            connection.Close();
+                command.ExecuteNonQuery();
+                connection.Close();
 
-            int id = Convert.ToInt32(command.Parameters["?out_id"].Value);
+                id = Convert.ToInt32(command.Parameters["?out_id"].Value);
+            }
+
             return id;
         }
-        //public int GetIdRegionReport(int idRegion, int idYearReport)
-        //{
-        //    if (connection.State == System.Data.ConnectionState.Closed) throw new Exception("Подкючение к базе данных закрыто");
+        public int AddInstitution(Institution institution, int idRegion)
+        {
+            Thread.Sleep(5000);
+            int id;
+            using (MySqlConnection connection = new MySqlConnection(connection_params))
+            using (MySqlCommand command = new MySqlCommand("add_institution", connection))
+            {
+                connection.Open();
 
-        //    MySqlCommand command = new MySqlCommand(String.Format("SELECT id FROM parser_region_report_year WHERE id_region = {0} AND id_year = {1}", idRegion, idYearReport), connection);
-        //    var idRegionReport = Convert.ToInt32(command.ExecuteScalar());
+                command.CommandType = CommandType.StoredProcedure;
 
-        //    return idRegionReport;
-        //}
-        //public void AddRegionReport(Region region, int idRegion, int idYearReport)
-        //{
-        //    if (connection.State == System.Data.ConnectionState.Closed) throw new Exception("Подкючение к базе данных закрыто");
+                command.Parameters.Add(new MySqlParameter("_link", institution.Site));
+                command.Parameters.Add(new MySqlParameter("_name", institution.Name));
+                command.Parameters.Add(new MySqlParameter("_adress", institution.Adress));
+                command.Parameters.Add(new MySqlParameter("_founder", institution.Founder));
+                command.Parameters.Add(new MySqlParameter("_department", institution.Department));
+                command.Parameters.Add(new MySqlParameter("_id_region", idRegion));
+                command.Parameters.Add(new MySqlParameter("out_id", 0));
+                command.Parameters["?out_id"].Direction = ParameterDirection.Output;
 
-        //    MySqlCommand command = new MySqlCommand(String.Format("INSERT INTO parser_region_report_year (id_region, id_year, count_all_students, count_fulltime_students, count_freeform_students) " +
-        //        "VALUES ({0}, {1}, {2}, {3}, {4})", idRegion, idYearReport, region.CountAllStudents, region.CountFullTimeStudents, region.CountFreeFormStudents), connection);
-        //    command.ExecuteNonQuery();
+                command.ExecuteNonQuery();
+                connection.Close();
 
-        //}
+                id = Convert.ToInt32(command.Parameters["?out_id"].Value);
+            }
 
-        public int AddInstitution(Institution institution, int idRegion) //Готовый
+            return id;
+        }
+        public int AddInstitutionReport(int idInstitution, int idYearReport)
         {
             Thread.Sleep(1000);
-            MySqlConnection connection = new MySqlConnection(connection_params);
-            connection.Open();
+            int id;
+            using (MySqlConnection connection = new MySqlConnection(connection_params))
+            using (MySqlCommand command = new MySqlCommand("add_institution_report", connection))
+            {
+                connection.Open();
 
-            MySqlCommand command = new MySqlCommand("add_institution", connection);
-            command.CommandType = CommandType.StoredProcedure;
+                command.CommandType = CommandType.StoredProcedure;
 
-            command.Parameters.Add(new MySqlParameter("_link", institution.Site));
-            command.Parameters.Add(new MySqlParameter("_name", institution.Name));
-            command.Parameters.Add(new MySqlParameter("_adress", institution.Adress));
-            command.Parameters.Add(new MySqlParameter("_founder", institution.Founder));
-            command.Parameters.Add(new MySqlParameter("_department", institution.Department));
-            command.Parameters.Add(new MySqlParameter("_id_region", idRegion));
-            command.Parameters.Add(new MySqlParameter("out_id", 0));
-            command.Parameters["?out_id"].Direction = ParameterDirection.Output;
+                command.Parameters.Add(new MySqlParameter("_id_institution", idInstitution));
+                command.Parameters.Add(new MySqlParameter("_id_year", idYearReport));
+                command.Parameters.Add(new MySqlParameter("out_id", 0));
+                command.Parameters["?out_id"].Direction = ParameterDirection.Output;
 
-            command.ExecuteNonQuery();
-            connection.Close();
+                command.ExecuteNonQuery();
+                connection.Close();
 
-            int id = Convert.ToInt32(command.Parameters["?out_id"].Value);
+                id = Convert.ToInt32(command.Parameters["?out_id"].Value);
+            }
+
             return id;
         }
-        //public int GetIdInstitution(string name)
-        //{
-        //    if (connection.State == System.Data.ConnectionState.Closed) throw new Exception("Подкючение к базе данных закрыто");
-
-        //    MySqlCommand command = new MySqlCommand(String.Format("SELECT id FROM parser_institution WHERE name = '{0}'", name), connection);
-        //    var idInstitution = Convert.ToInt32(command.ExecuteScalar());
-
-        //    return idInstitution;
-        //}
-        //public void AddInstitution(Institution institution, int IdRegion)
-        //{
-        //    if (connection.State == System.Data.ConnectionState.Closed) throw new Exception("Подкючение к базе данных закрыто");
-
-        //    MySqlCommand command = new MySqlCommand(String.Format("INSERT INTO parser_institution (name, adress, founder, department, id_region) " +
-        //        "VALUES ('{0}', '{1}', '{2}', '{3}', {4})", institution.Name, institution.Adress, institution.Founder, institution.Department, IdRegion), connection);
-        //    command.ExecuteNonQuery();
-        //}
-        public int AddInstitutionReport(int idInstitution, int idYearReport) //Готовый
+        public int AddUnitMeasure(string name)
         {
-            Thread.Sleep(1000);
-            MySqlConnection connection = new MySqlConnection(connection_params);
-            connection.Open();
+            Thread.Sleep(100);
+            int id;
+            using (MySqlConnection connection = new MySqlConnection(connection_params))
+            using (MySqlCommand command = new MySqlCommand("add_unit_measure", connection))
+            {
+                connection.Open();
 
-            MySqlCommand command = new MySqlCommand("add_institution_report", connection);
-            command.CommandType = CommandType.StoredProcedure;
+                command.CommandType = CommandType.StoredProcedure;
 
-            command.Parameters.Add(new MySqlParameter("_id_institution", idInstitution));
-            command.Parameters.Add(new MySqlParameter("_id_year", idYearReport));
-            command.Parameters.Add(new MySqlParameter("out_id", 0));
-            command.Parameters["?out_id"].Direction = ParameterDirection.Output;
+                command.Parameters.Add(new MySqlParameter("_name", name));
+                command.Parameters.Add(new MySqlParameter("out_id", 0));
+                command.Parameters["?out_id"].Direction = ParameterDirection.Output;
 
-            command.ExecuteNonQuery();
-            connection.Close();
+                command.ExecuteNonQuery();
+                connection.Close();
 
-            int id = Convert.ToInt32(command.Parameters["?out_id"].Value);
+                id = Convert.ToInt32(command.Parameters["?out_id"].Value);
+            }
+
             return id;
         }
-        public int AddUnitMeasure(string name) //Готовый
+        public int AddNameIndicator(string name, string number, int idUnitMeasure) //Готовый
         {
-            Thread.Sleep(1000);
-            MySqlConnection connection = new MySqlConnection(connection_params);
-            connection.Open();
+            Thread.Sleep(100);
+            int id;
+            using (MySqlConnection connection = new MySqlConnection(connection_params))
+            using (MySqlCommand command = new MySqlCommand("add_name_indicator", connection))
+            {
+                connection.Open();
 
-            MySqlCommand command = new MySqlCommand("add_unit_measure", connection);
-            command.CommandType = CommandType.StoredProcedure;
+                command.CommandType = CommandType.StoredProcedure;
 
-            command.Parameters.Add(new MySqlParameter("_name", name));
-            command.Parameters.Add(new MySqlParameter("out_id", 0));
-            command.Parameters["?out_id"].Direction = ParameterDirection.Output;
+                command.Parameters.Add(new MySqlParameter("_name", name));
+                command.Parameters.Add(new MySqlParameter("_number", number));
+                command.Parameters.Add(new MySqlParameter("_id_unit_measure", idUnitMeasure));
+                command.Parameters.Add(new MySqlParameter("out_id", 0));
+                command.Parameters["?out_id"].Direction = ParameterDirection.Output;
 
-            command.ExecuteNonQuery();
-            connection.Close();
+                command.ExecuteNonQuery();
+                connection.Close();
 
-            int id = Convert.ToInt32(command.Parameters["?out_id"].Value);
+                id = Convert.ToInt32(command.Parameters["?out_id"].Value);
+            }
+            
             return id;
         }
-
-        //public int GetIdInstitutionReport(int idInstitution, int idYearReport)
-        //{
-        //    if (connection.State == System.Data.ConnectionState.Closed) throw new Exception("Подкючение к базе данных закрыто");
-
-        //    MySqlCommand command = new MySqlCommand(String.Format("SELECT id FROM parser_institution_report_year WHERE id_institution = {0} AND id_year = {1}", 
-        //        idInstitution, idYearReport), connection);
-        //    var idInstitutionReport = Convert.ToInt32(command.ExecuteScalar());
-
-        //    return idInstitutionReport;
-        //}
-        //public void AddInstitutionReport(int idInstitution, int idYearReport)
-        //{
-        //    if (connection.State == System.Data.ConnectionState.Closed) throw new Exception("Подкючение к базе данных закрыто");
-
-        //    MySqlCommand command = new MySqlCommand(String.Format("INSERT INTO parser_institution_report_year (id_institution, id_year ) " +
-        //        "VALUES ({0}, {1})", idInstitution, idYearReport), connection);
-        //    command.ExecuteNonQuery();
-        //}
-
-        public int AddNameIndicator(string name, double number, int idUnitMeasure) //Готовый
+        public int AddValueIndicator(int idInstitutionReport, int idNameIndicator, double value) 
         {
-            Thread.Sleep(1000);
-            MySqlConnection connection = new MySqlConnection(connection_params);
-            connection.Open();
+            Thread.Sleep(100);
+            int id;
+            using (MySqlConnection connection = new MySqlConnection(connection_params))
+            using (MySqlCommand command = new MySqlCommand("add_value_indicator", connection))
+            {
+                connection.Open();
 
-            MySqlCommand command = new MySqlCommand("add_name_indicator", connection);
-            command.CommandType = CommandType.StoredProcedure;
+                command.CommandType = CommandType.StoredProcedure;
 
-            command.Parameters.Add(new MySqlParameter("_name", name));
-            command.Parameters.Add(new MySqlParameter("_number", number));
-            command.Parameters.Add(new MySqlParameter("_id_unit_measure", idUnitMeasure));
-            command.Parameters.Add(new MySqlParameter("out_id", 0));
-            command.Parameters["?out_id"].Direction = ParameterDirection.Output;
+                command.Parameters.Add(new MySqlParameter("_id_institution_report_year", idInstitutionReport));
+                command.Parameters.Add(new MySqlParameter("_id_name_indicator", idNameIndicator));
+                command.Parameters.Add(new MySqlParameter("_value", value));
+                command.Parameters.Add(new MySqlParameter("out_id", 0));
+                command.Parameters["?out_id"].Direction = ParameterDirection.Output;
 
-            command.ExecuteNonQuery();
-            connection.Close();
+                command.ExecuteNonQuery();
+                connection.Close();
 
-            int id = Convert.ToInt32(command.Parameters["?out_id"].Value);
+                id = Convert.ToInt32(command.Parameters["?out_id"].Value);
+            }
+            
             return id;
         }
-        public int AddValueIndicator(int idInstitutionReport, int idNameIndicator, double value) //
+        public int AddUgn(string name)
         {
-            Thread.Sleep(1000);
-            MySqlConnection connection = new MySqlConnection(connection_params);
-            connection.Open();
+            Thread.Sleep(100);
+            int id;
+            using (MySqlConnection connection = new MySqlConnection(connection_params))
+            using (MySqlCommand command = new MySqlCommand("add_ugn", connection))
+            {
+                connection.Open();
 
-            MySqlCommand command = new MySqlCommand("add_value_indicator", connection);
-            command.CommandType = CommandType.StoredProcedure;
+                command.CommandType = CommandType.StoredProcedure;
 
-            command.Parameters.Add(new MySqlParameter("_id_institution_report_year", idInstitutionReport));
-            command.Parameters.Add(new MySqlParameter("_id_name_indicator", idNameIndicator));
-            command.Parameters.Add(new MySqlParameter("_value", value));
-            command.Parameters.Add(new MySqlParameter("out_id", 0));
-            command.Parameters["?out_id"].Direction = ParameterDirection.Output;
+                command.Parameters.Add(new MySqlParameter("_name", name));
+                command.Parameters.Add(new MySqlParameter("out_id", 0));
+                command.Parameters["?out_id"].Direction = ParameterDirection.Output;
 
-            command.ExecuteNonQuery();
-            connection.Close();
+                command.ExecuteNonQuery();
+                connection.Close();
 
-            int id = Convert.ToInt32(command.Parameters["?out_id"].Value);
+                id = Convert.ToInt32(command.Parameters["?out_id"].Value);
+            }
+
+            return id;
+        }
+        public int AddDistributionUgn(int idInstitution, int idUgn, int countStudents)
+        {
+            Thread.Sleep(2000);
+            int id;
+            using (MySqlConnection connection = new MySqlConnection(connection_params))
+            using (MySqlCommand command = new MySqlCommand("add_distribution_ugn", connection))
+            {
+                connection.Open();
+
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.Add(new MySqlParameter("_id_institution", idInstitution));
+                command.Parameters.Add(new MySqlParameter("_id_ugn", idUgn));
+                command.Parameters.Add(new MySqlParameter("_count_students", countStudents));
+                command.Parameters.Add(new MySqlParameter("out_id", 0));
+                command.Parameters["?out_id"].Direction = ParameterDirection.Output;
+
+                command.ExecuteNonQuery();
+                connection.Close();
+
+                id = Convert.ToInt32(command.Parameters["?out_id"].Value);
+            }
+
             return id;
         }
 
+        public int AddBranchScience(string name)
+        {
+            Thread.Sleep(100);
+            int id;
+            using (MySqlConnection connection = new MySqlConnection(connection_params))
+            using (MySqlCommand command = new MySqlCommand("add_branch_science", connection))
+            {
+                connection.Open();
+
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.Add(new MySqlParameter("_name", name));
+                command.Parameters.Add(new MySqlParameter("out_id", 0));
+                command.Parameters["?out_id"].Direction = ParameterDirection.Output;
+
+                command.ExecuteNonQuery();
+                connection.Close();
+
+                id = Convert.ToInt32(command.Parameters["?out_id"].Value);
+            }
+
+            return id;
+        }
+        public int AddDistributionBranch(int idInstitutionReport, int idBranch, int countStudents)
+        {
+            Thread.Sleep(2000);
+            int id;
+            using (MySqlConnection connection = new MySqlConnection(connection_params))
+            using (MySqlCommand command = new MySqlCommand("add_distribution_branches", connection))
+            {
+                connection.Open();
+
+                command.CommandType = CommandType.StoredProcedure;
+
+                command.Parameters.Add(new MySqlParameter("_id_institution_report", idInstitutionReport));
+                command.Parameters.Add(new MySqlParameter("_id_branch", idBranch));
+                command.Parameters.Add(new MySqlParameter("_count_students", countStudents));
+                command.Parameters.Add(new MySqlParameter("out_id", 0));
+                command.Parameters["?out_id"].Direction = ParameterDirection.Output;
+
+                command.ExecuteNonQuery();
+                connection.Close();
+
+                id = Convert.ToInt32(command.Parameters["?out_id"].Value);
+            }
+
+            return id;
+        }
         public void AddLinkReady(string link)
         {
-            Thread.Sleep(1000);
-            MySqlConnection connection = new MySqlConnection(connection_params);
-            connection.Open();
+            //Thread.Sleep(5000);
+            using (MySqlConnection connection = new MySqlConnection(connection_params))
+            using (MySqlCommand command = new MySqlCommand("add_link_ready", connection))
+            {
+                connection.Open();
 
-            MySqlCommand command = new MySqlCommand("add_link_ready", connection);
-            command.CommandType = CommandType.StoredProcedure;
-            command.Parameters.Add(new MySqlParameter("_link", link));
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.Add(new MySqlParameter("_link", link));
 
-            command.ExecuteNonQuery();
-            connection.Close();
+                command.ExecuteNonQuery();
+                connection.Close();
+            }            
         }
         public void AddLinksReady(List<string> links)
         {

@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ParsingOfEducationalinstitutions.Users.Applicant" Collapsed="true">
+    <Position X="6.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Users\Applicant.cs</FileName>
+      <NewMemberFileName>Users\applicant.cs</NewMemberFileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ParsingOfEducationalinstitutions.Users.Admin" Collapsed="true">
+    <Position X="2.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Users\Admin.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ParsingOfEducationalinstitutions.Users.RepresentativeInstitution" Collapsed="true">
+    <Position X="4.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAQAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Users\RepresentativeInstitution.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ParsingOfEducationalinstitutions.Users.User" Collapsed="true">
+    <Position X="4.75" Y="0.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAEAAQAAAAAAAACAAAQAAAAAAg=</HashCode>
+      <FileName>Users\User.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="ParsingOfEducationalinstitutions.Users.TypeRepresentative" Collapsed="true">
+    <Position X="4.75" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Users\RepresentativeInstitution.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

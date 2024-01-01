@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="ParsingOfEducationalinstitutions.Region">
+    <Position X="8.5" Y="2.75" Width="1.5" />
+    <AssociationLine Name="institutions" Type="ParsingOfEducationalinstitutions.Institution" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="8.5" Y="3.812" />
+        <Point X="8.125" Y="3.805" />
+        <Point X="7.5" Y="3.805" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAACAAAABABAAAoAAAAAIAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Region.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="institutions" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="ParsingOfEducationalinstitutions.Institution">
+    <Position X="6" Y="2.75" Width="1.5" />
+    <AssociationLine Name="BranchesScience" Type="ParsingOfEducationalinstitutions.BranchScience" ManuallyRouted="true" FixedToPoint="true">
+      <Path>
+        <Point X="6.688" Y="5.651" />
+        <Point X="6.688" Y="6" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.05" Y="0.12" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Ugns" Type="ParsingOfEducationalinstitutions.Ugn" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="6" Y="4.688" />
+        <Point X="5.381" Y="4.688" />
+        <Point X="5.381" Y="6.562" />
+        <Point X="5" Y="6.562" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.091" Y="-0.304" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="VerificationResults" Type="ParsingOfEducationalinstitutions.VerificationResult" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.375" Y="5.651" />
+        <Point X="9.312" Y="5.651" />
+        <Point X="9.312" Y="6" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Indicators" Type="Indicator" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="7.5" Y="5.438" />
+        <Point X="11.688" Y="5.438" />
+        <Point X="11.688" Y="6" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>ACACCGACBAAAgABAAAAAAAQAEAgAAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>Institution.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="BranchesScience" />
+      <Property Name="Ugns" />
+      <Property Name="VerificationResults" />
+      <Property Name="Reviews" />
+      <Property Name="Indicators" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="ParsingOfEducationalinstitutions.Review">
+    <Position X="3.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAgAgAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Review.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ParsingOfEducationalinstitutions.Ugn">
+    <Position X="3.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Ugn.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ParsingOfEducationalinstitutions.VerificationResult">
+    <Position X="8.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAICAAAEAAAAAAAAAQAAAAAAAAAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>VerificationResult.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="ParsingOfEducationalinstitutions.YearReport">
+    <Position X="11" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAABAAAAAoAAAAAIAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>YearReport.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Regions" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="ParsingOfEducationalinstitutions.BranchScience">
+    <Position X="6" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>BranchScience.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="Indicator">
+    <Position X="11" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAQAAAAAAAAAAAAAAEACAAAAAAAAAAAAA=</HashCode>
+      <FileName>Indicator.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="ParsingOfEducationalinstitutions.TypeTonality">
+    <Position X="3.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAACAAAA=</HashCode>
+      <FileName>Review.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

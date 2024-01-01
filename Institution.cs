@@ -32,14 +32,21 @@ namespace ParsingOfEducationalinstitutions
         public string Founder { get; set; }
 
         [JsonProperty("indicators_institution")]
-        public List<Indicator> Indicators = new List<Indicator>();
+        public List<Indicator> Indicators { get; set; }
+        public List<BranchScience> BranchesScience { get; set; }
+        public List<Ugn> Ugns { get; set; }
+        public List<VerificationResult> VerificationResults { get; set; }
+        public List<Review> Reviews { get; set; }
         [JsonIgnore]
         public int Year { get; set; }
+        public double Rating { get; set; }
 
         public Institution(int id, int year)
         {
             Id = id;
             Year = year;
+            Indicators = new List<Indicator>();
+            Ugns = new List<Ugn>();
         }
     }
 }
