@@ -15,12 +15,13 @@ namespace ParsingOfEducationalinstitutions
     {
         static void Main(string[] args)
         {
+            //Запуск полного функционала парсера
+            //Parser parser = new Parser();
+            //parser.Start();
+
+            //Запуск парсера отзывов
             Parser parser = new Parser();
-            parser.Start();
-            //YearReport yearReport = new YearReport(2023);
-            //parser.ParseYearReport(yearReport);
-
-
+            parser.ParseReviews();
 
             //DataBase db = new DataBase();
 
