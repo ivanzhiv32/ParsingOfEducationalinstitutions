@@ -20,8 +20,8 @@ namespace ParsingOfEducationalinstitutions
             //parser.Start();
 
             //Запуск парсера отзывов
-            Parser parser = new Parser();
-            parser.ParseReviews();
+            //Parser parser = new Parser();
+            //parser.ParseReviews();
 
             //DataBase db = new DataBase();
 
@@ -59,7 +59,9 @@ namespace ParsingOfEducationalinstitutions
             //db.AddLinksReady(links);
 
             //Проверка парсера
-            //var parser = new Parser();
+            var parser = new Parser();
+
+
 
             //Region belgorod = new Region(10501, 2021);
             //Region chuvash = new Region(10405, 2021);
@@ -67,7 +69,36 @@ namespace ParsingOfEducationalinstitutions
             //parser.ParseRegion(chuvash);
             //Console.WriteLine(region.Name);
 
-            //YearReport yearReport = new YearReport(2021);
+            DataBase dataBase = new DataBase();
+
+            YearReport yearReport = new YearReport(2023);
+            yearReport.CountAllStudents = 111;
+            yearReport.CountFreeFormStudents = 222;
+            yearReport.CountFullTimeStudents = 333;
+            dataBase.AddYearReport(yearReport);
+
+            Region region = new Region();
+            region.Id = 25;
+            region.Name = "Bryansk";
+            var x = dataBase.AddRegion(region);
+
+            region.CountAllStudents = 111;
+            region.CountFreeFormStudents = 222;
+            region.CountFullTimeStudents = 333;
+
+            var z = dataBase.AddRegionReport(region, yearReport.Year);
+
+            Institution institution = new Institution(555, 2023);
+            institution.Name = "BSTU";
+            institution.Site = "www.ru";
+            institution.Adress = "petrova st";
+            institution.Department = "vs rf";
+            institution.Founder = "dsfsd";
+
+            var f = dataBase.AddInstitution(institution, 25);
+
+            var c = dataBase.AddInstitutionReport(243, yearReport.Year);
+
             //parser.ParseYearReport(yearReport);
 
             //File.WriteAllText("two_regions.json", string.Empty);

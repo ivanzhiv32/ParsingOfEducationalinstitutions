@@ -1,0 +1,213 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="HigherEducationApp.Models.BranchScience">
+    <Position X="1.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\BranchScience.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HigherEducationApp.Models.RatingInstitution">
+    <Position X="10.5" Y="0.5" Width="1.5" />
+    <AssociationLine Name="Institution" Type="HigherEducationApp.Models.Institution" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="11.188" Y="2.824" />
+        <Point X="11.188" Y="3.346" />
+        <Point X="9.583" Y="3.346" Type="JumpStart" />
+        <Point X="9.417" Y="3.346" Type="JumpEnd" />
+        <Point X="7" Y="3.346" />
+        <Point X="7" Y="3.5" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-4.062" Y="0.242" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AIACAAAAAAAAAAAAYAAAAAAAAAAAAAEACAABAAAAAAA=</HashCode>
+      <FileName>Models\RatingInstitution.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Institution" />
+      <Property Name="YearReport" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="HigherEducationApp.Models.Region">
+    <Position X="8.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAECAAAAAAAAAAAAQAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Region.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HigherEducationApp.Models.RegionReport">
+    <Position X="8.75" Y="0.5" Width="1.5" />
+    <AssociationLine Name="Region" Type="HigherEducationApp.Models.Region">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.071" Y="0.408" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAgAAAAAoAIAAAIAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\RegionReport.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Region" />
+      <Property Name="YearReport" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="HigherEducationApp.Models.ReviewOfInstitution">
+    <Position X="10.5" Y="3.5" Width="1.5" />
+    <AssociationLine Name="Institution" Type="HigherEducationApp.Models.Institution" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="10.5" Y="4.562" />
+        <Point X="10.377" Y="4.562" />
+        <Point X="10.377" Y="5.812" />
+        <Point X="7.75" Y="5.812" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAACAAAAQAAAgAAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>Models\ReviewOfInstitution.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Institution" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="HigherEducationApp.Models.Ugn">
+    <Position X="10.5" Y="6.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Ugn.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HigherEducationApp.Models.UnitMeasure">
+    <Position X="1.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\UnitMeasure.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HigherEducationApp.Models.VerificationResult">
+    <Position X="6.25" Y="7.25" Width="1.5" />
+    <AssociationLine Name="Institution" Type="HigherEducationApp.Models.Institution" FixedFromPoint="true">
+      <Path>
+        <Point X="6.938" Y="7.25" />
+        <Point X="6.938" Y="6.978" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="0.06" Y="0.066" Height="0.182" Width="0.905" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAICAAAEAAAAAAAAQQAAAAAAAAAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>Models\VerificationResult.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Institution" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="HigherEducationApp.Models.YearReport">
+    <Position X="6.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAECAAAABAAAAAqAAAAAIAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\YearReport.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HigherEducationApp.Models.DistributionBranches">
+    <Position X="1.5" Y="0.5" Width="1.5" />
+    <AssociationLine Name="BranchScience" Type="HigherEducationApp.Models.BranchScience">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.19" Y="0.159" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAACAAAAAAAAAAAAAAIAAAAAgAAAAAAA=</HashCode>
+      <FileName>Models\DistributionBranches.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="InstitutionReport" />
+      <Property Name="BranchScience" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="HigherEducationApp.Models.DistributionUgn">
+    <Position X="8.75" Y="6.25" Width="1.5" />
+    <AssociationLine Name="Ugn" Type="HigherEducationApp.Models.Ugn" FixedToPoint="true">
+      <Path>
+        <Point X="10.25" Y="6.5" />
+        <Point X="10.5" Y="6.5" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-0.149" Y="0.253" Height="0.182" Width="0.651" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAQAAABAAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>Models\DistributionUgn.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Institution" />
+      <Property Name="Ugn" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="HigherEducationApp.Models.Indicator" BaseTypeListCollapsed="true">
+    <Position X="3.75" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAIAAAAAASAgAAAAAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>Models\Indicator.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="TypeIndicator" />
+    </ShowAsAssociation>
+    <Lollipop Orientation="Left" Position="1.992" />
+  </Class>
+  <Class Name="HigherEducationApp.Models.Institution">
+    <Position X="6.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACACAGACgAAAgACAAgAAAAQAEAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Institution.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Region" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="HigherEducationApp.Models.InstitutionReport">
+    <Position X="3.75" Y="0.5" Width="1.5" />
+    <AssociationLine Name="Indicators" Type="HigherEducationApp.Models.Indicator">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.049" Y="0.264" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Institution" Type="HigherEducationApp.Models.Institution" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="5.25" Y="1.662" />
+        <Point X="5.523" Y="1.662" />
+        <Point X="5.523" Y="4.312" />
+        <Point X="6.25" Y="4.312" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.027" Y="0.11" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAACCAAIBAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\InstitutionReport.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Institution" />
+      <Property Name="Year" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Indicators" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="HigherEducationApp.Models.TypeIndicator">
+    <Position X="3.75" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAEAAAAQAAAAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Models\TypeIndicator.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="UnitMeasure" />
+    </ShowAsAssociation>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

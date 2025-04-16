@@ -11,8 +11,8 @@ namespace ParsingOfEducationalinstitutions
 {
     class DataBase
     {
-        string connection_params = "server=127.0.0.1;port=3306;username=root;password=dgiva4444;database=new_schema";
-        //string connection_params = "server=s2.kts.tu-bryansk.ru;port=3306;username=IAS18.ZHivII;password=3q%Md=Q2/4;database=IAS18_ZHivII";
+        string connection_params = "server=127.0.0.1;port=3306;username=root;password=dgiva4444;database=higher_education";
+        //string connection_params = "server=127.0.0.1;port=3306;username=root;password=dgiva4444;database=new_schema";
 
         public List<string> GetLinksReady()
         {
@@ -73,6 +73,7 @@ namespace ParsingOfEducationalinstitutions
 
                 command.CommandType = CommandType.StoredProcedure;
 
+                command.Parameters.Add(new MySqlParameter("_id", region.Id)); //new
                 command.Parameters.Add(new MySqlParameter("_name", region.Name));
                 command.Parameters.Add(new MySqlParameter("out_id", 0));
                 command.Parameters["?out_id"].Direction = ParameterDirection.Output;
@@ -85,10 +86,10 @@ namespace ParsingOfEducationalinstitutions
 
             return id;
         }
-        public int AddRegionReport(Region region, int idRegion, int idYearReport)
+        public bool AddRegionReport(Region region, int year)
         {
             Thread.Sleep(5000);
-            int id;
+            bool id;
             using (MySqlConnection connection = new MySqlConnection(connection_params))
             using (MySqlCommand command = new MySqlCommand("add_region_report", connection))
             {
@@ -96,26 +97,26 @@ namespace ParsingOfEducationalinstitutions
 
                 command.CommandType = CommandType.StoredProcedure;
 
-                command.Parameters.Add(new MySqlParameter("_id_region", idRegion));
-                command.Parameters.Add(new MySqlParameter("_id_year", idYearReport));
+                command.Parameters.Add(new MySqlParameter("_id_region", region.Id));
+                command.Parameters.Add(new MySqlParameter("_id_year", year));
                 command.Parameters.Add(new MySqlParameter("_count_all_students", region.CountAllStudents));
                 command.Parameters.Add(new MySqlParameter("_count_fulltime_students", region.CountFullTimeStudents));
                 command.Parameters.Add(new MySqlParameter("_count_freeform_students", region.CountFreeFormStudents));
-                command.Parameters.Add(new MySqlParameter("out_id", 0));
-                command.Parameters["?out_id"].Direction = ParameterDirection.Output;
+                command.Parameters.Add(new MySqlParameter("is_exist", 0));
+                command.Parameters["?is_exist"].Direction = ParameterDirection.Output;
 
                 command.ExecuteNonQuery();
                 connection.Close();
 
-                id = Convert.ToInt32(command.Parameters["?out_id"].Value);
+                id = Convert.ToBoolean(command.Parameters["?is_exist"].Value);
             }
 
             return id;
         }
-        public int AddInstitution(Institution institution, int idRegion)
+        public bool AddInstitution(Institution institution, int idRegion)
         {
             Thread.Sleep(5000);
-            int id;
+            bool is_exist;
             using (MySqlConnection connection = new MySqlConnection(connection_params))
             using (MySqlCommand command = new MySqlCommand("add_institution", connection))
             {
@@ -123,22 +124,23 @@ namespace ParsingOfEducationalinstitutions
 
                 command.CommandType = CommandType.StoredProcedure;
 
+                command.Parameters.Add(new MySqlParameter("_id", institution.Id));
                 command.Parameters.Add(new MySqlParameter("_link", institution.Site));
                 command.Parameters.Add(new MySqlParameter("_name", institution.Name));
                 command.Parameters.Add(new MySqlParameter("_adress", institution.Adress));
                 command.Parameters.Add(new MySqlParameter("_founder", institution.Founder));
                 command.Parameters.Add(new MySqlParameter("_department", institution.Department));
                 command.Parameters.Add(new MySqlParameter("_id_region", idRegion));
-                command.Parameters.Add(new MySqlParameter("out_id", 0));
-                command.Parameters["?out_id"].Direction = ParameterDirection.Output;
+                command.Parameters.Add(new MySqlParameter("is_exist", false));
+                command.Parameters["?is_exist"].Direction = ParameterDirection.Output;
 
                 command.ExecuteNonQuery();
                 connection.Close();
 
-                id = Convert.ToInt32(command.Parameters["?out_id"].Value);
+                is_exist = Convert.ToBoolean(command.Parameters["?is_exist"].Value);
             }
 
-            return id;
+            return is_exist;
         }
         public int AddInstitutionReport(int idInstitution, int idYearReport)
         {
@@ -187,12 +189,12 @@ namespace ParsingOfEducationalinstitutions
 
             return id;
         }
-        public int AddNameIndicator(string name, string number, int idUnitMeasure) //Готовый
+        public int AddIndicator(string name, string number, string unitMeasure) //Готовый
         {
             Thread.Sleep(100);
             int id;
             using (MySqlConnection connection = new MySqlConnection(connection_params))
-            using (MySqlCommand command = new MySqlCommand("add_name_indicator", connection))
+            using (MySqlCommand command = new MySqlCommand("add_indicator", connection))
             {
                 connection.Open();
 
@@ -200,7 +202,7 @@ namespace ParsingOfEducationalinstitutions
 
                 command.Parameters.Add(new MySqlParameter("_name", name));
                 command.Parameters.Add(new MySqlParameter("_number", number));
-                command.Parameters.Add(new MySqlParameter("_id_unit_measure", idUnitMeasure));
+                command.Parameters.Add(new MySqlParameter("_unit_measure", unitMeasure));
                 command.Parameters.Add(new MySqlParameter("out_id", 0));
                 command.Parameters["?out_id"].Direction = ParameterDirection.Output;
 
@@ -212,10 +214,10 @@ namespace ParsingOfEducationalinstitutions
             
             return id;
         }
-        public int AddValueIndicator(int idInstitutionReport, int idNameIndicator, double value) 
+        public bool AddValueIndicator(int idInstitution, int year, int idNameIndicator, double value) 
         {
             Thread.Sleep(100);
-            int id;
+            bool is_exist;
             using (MySqlConnection connection = new MySqlConnection(connection_params))
             using (MySqlCommand command = new MySqlCommand("add_value_indicator", connection))
             {
@@ -223,19 +225,20 @@ namespace ParsingOfEducationalinstitutions
 
                 command.CommandType = CommandType.StoredProcedure;
 
-                command.Parameters.Add(new MySqlParameter("_id_institution_report_year", idInstitutionReport));
-                command.Parameters.Add(new MySqlParameter("_id_name_indicator", idNameIndicator));
+                command.Parameters.Add(new MySqlParameter("_id_institution", idInstitution));
+                command.Parameters.Add(new MySqlParameter("_id_year", year));
+                command.Parameters.Add(new MySqlParameter("_id_indicator", idNameIndicator));
                 command.Parameters.Add(new MySqlParameter("_value", value));
-                command.Parameters.Add(new MySqlParameter("out_id", 0));
-                command.Parameters["?out_id"].Direction = ParameterDirection.Output;
+                command.Parameters.Add(new MySqlParameter("is_exist", 0));
+                command.Parameters["?is_exist"].Direction = ParameterDirection.Output;
 
                 command.ExecuteNonQuery();
                 connection.Close();
 
-                id = Convert.ToInt32(command.Parameters["?out_id"].Value);
+                is_exist = Convert.ToBoolean(command.Parameters["?out_id"].Value);
             }
             
-            return id;
+            return is_exist;
         }
         public int AddUgn(string name)
         {

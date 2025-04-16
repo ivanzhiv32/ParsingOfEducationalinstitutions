@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="HigherEducationApp.Models.Institution">
+    <Position X="4" Y="1.5" Width="1.5" />
+    <AssociationLine Name="Region" Type="HigherEducationApp.Models.Region" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="4" Y="4.188" />
+        <Point X="2.562" Y="4.188" />
+        <Point X="2.562" Y="5" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>ACACAGACgAAAgACAAgAAAAQAEAgAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Institution.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Region" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="HigherEducationApp.Models.ReviewOfInstitution">
+    <Position X="4" Y="5.5" Width="1.5" />
+    <AssociationLine Name="Institution" Type="HigherEducationApp.Models.Institution" FixedFromPoint="true">
+      <Path>
+        <Point X="4.812" Y="5.5" />
+        <Point X="4.812" Y="4.978" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAACAAAAQAAAgAAAAAAAAAAAAAAACAAAAAA=</HashCode>
+      <FileName>Models\ReviewOfInstitution.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Institution" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="HigherEducationApp.Models.Region">
+    <Position X="1.75" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAECAAAAAAAAAAAAQAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Region.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="HigherEducationApp.Models.VerificationResult">
+    <Position X="1.75" Y="1.5" Width="1.5" />
+    <AssociationLine Name="Institution" Type="HigherEducationApp.Models.Institution">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="-0.042" Y="0.06" Height="0.182" Width="0.95" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAICAAAEAAAAAAAAQQAAAAAAAAAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>Models\VerificationResult.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Institution" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="HigherEducationApp.Models.DistributionUgn">
+    <Position X="6.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAQAAABAAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>Models\DistributionUgn.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Institution" />
+      <Property Name="Ugn" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="HigherEducationApp.Models.Ugn">
+    <Position X="6.5" Y="3.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Models\Ugn.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
